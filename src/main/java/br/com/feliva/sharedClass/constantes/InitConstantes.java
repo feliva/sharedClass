@@ -7,7 +7,7 @@ import java.util.Properties;
 public class InitConstantes {
 
 	//PATH é alterado por script de instalacao config/wildfly/install.sh rode ele
-	static public final String PATH_RESOURCES = "/opt/sifw";//<#PATH#>
+	static public final String PATH_RESOURCES = "c:/feliva/install";//<#PATH#>
 	
 	private static Properties config = new Properties();
 
