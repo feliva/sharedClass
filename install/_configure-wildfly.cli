@@ -1,0 +1,53 @@
+#configuração soteria
+#/subsystem=undertow/application-security-domain=other:write-attribute(name=integrated-jaspi, value=false)
+
+#configuração e-mail
+/subsystem=mail/mail-session=default/server=smtp/:write-attribute(name=username,value=<#EMAIL#>)
+/subsystem=mail/mail-session=default/server=smtp/:write-attribute(name=password,value=<#SENHA_EMAIL#>)
+/subsystem=mail/mail-session=default/server=smtp/:write-attribute(name=tls,value=true)
+/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp/:write-attribute(name=host,value=smtp.gmail.com)
+/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp/:write-attribute(name=port,value=587)
+
+#configuração drive postgres
+module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --dependencies=javax.api,javax.transaction.api
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql.jdbc", driver-class-name="org.postgresql.Driver", driver-xa-datasource-class-name="org.postgresql.xa.PGXADataSource")
+
+#configuração datasource
+/subsystem=datasources/data-source=baseDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/baseDS",connection-url="jdbc:postgresql://localhost:5432/base",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=sessionDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sessionDS",connection-url="jdbc:postgresql://localhost:5432/session",user-name=postgres, password=postgres)
+
+#configuração numero de conexoes do datasource
+/subsystem=datasources/data-source=baseDS:write-attribute(name=min-pool-size,value=10)
+/subsystem=datasources/data-source=baseDS:write-attribute(name=max-pool-size,value=50)
+
+#desativa http2, exception não padronizada na especificação
+/subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=enable-http2,value=false)
+/subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=enable-http2,value=false)
+
+#oidc config
+/subsystem=elytron-oidc-client/secure-deployment="sifw.war"/:add( \
+    realm="feliva", \
+    resource="sifw", \
+    auth-server-url=<#AUTH_SERVER_URL#>/service/auth/, \
+    ssl-required=EXTERNAL)
+
+/subsystem=elytron-oidc-client/secure-deployment=sifw.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
+
+/subsystem=elytron-oidc-client/secure-deployment="testAuth.war"/:add( \
+    realm="feliva", \
+    resource="testAuth", \
+    auth-server-url=<#AUTH_SERVER_URL#>/auth/auth/, \
+    ssl-required=EXTERNAL)
+
+/subsystem=elytron-oidc-client/secure-deployment=testAuth.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
+
+
+#configuração infinispan
+/subsystem=infinispan/cache-container=web/invalidation-cache=http-db:add()
+/subsystem=infinispan/cache-container=web:write-attribute(name=default-cache,value=http-db)
+/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=none:remove(){allow-resource-service-restart=true}
+/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=jdbc:add(data-source=sessionDS,dialect=POSTGRES,passivation=false,purge=false,shared=true)
+/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=jdbc/table=string:write-attribute(name=data-column.type, value=BYTEA)
+/subsystem=distributable-web/infinispan-session-management=database-cache:add(cache-container=web, cache=http-db, granularity=SESSION)
+/subsystem=distributable-web:write-attribute(name=default-session-management, value=database-cache)
+/subsystem=distributable-web/infinispan-session-management=default:remove

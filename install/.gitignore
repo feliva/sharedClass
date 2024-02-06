@@ -1,0 +1,8 @@
+/configure-wildfly.cli
+/launch.sh
+/wildfly.conf
+/wildfly.service
+/configuration_linux.properties
+*.gz
+*.jar
+*.zip
