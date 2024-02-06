@@ -42,12 +42,12 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 /subsystem=elytron-oidc-client/secure-deployment=testAuth.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
 
 
-#configuração infinispan
-/subsystem=infinispan/cache-container=web/invalidation-cache=http-db:add()
-/subsystem=infinispan/cache-container=web:write-attribute(name=default-cache,value=http-db)
-/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=none:remove(){allow-resource-service-restart=true}
-/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=jdbc:add(data-source=sessionDS,dialect=POSTGRES,passivation=false,purge=false,shared=true)
-/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=jdbc/table=string:write-attribute(name=data-column.type, value=BYTEA)
-/subsystem=distributable-web/infinispan-session-management=database-cache:add(cache-container=web, cache=http-db, granularity=SESSION)
-/subsystem=distributable-web:write-attribute(name=default-session-management, value=database-cache)
-/subsystem=distributable-web/infinispan-session-management=default:remove
+#configuração infinispan esta funcionando, mas demora mais no desenvolvimento para subir o server
+#/subsystem=infinispan/cache-container=web/invalidation-cache=http-db:add()
+#/subsystem=infinispan/cache-container=web:write-attribute(name=default-cache,value=http-db)
+#/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=none:remove(){allow-resource-service-restart=true}
+#/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=jdbc:add(data-source=sessionDS,dialect=POSTGRES,passivation=false,purge=false,shared=true)
+#/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=jdbc/table=string:write-attribute(name=data-column.type, value=BYTEA)
+#/subsystem=distributable-web/infinispan-session-management=database-cache:add(cache-container=web, cache=http-db, granularity=SESSION)
+#/subsystem=distributable-web:write-attribute(name=default-session-management, value=database-cache)
+#/subsystem=distributable-web/infinispan-session-management=default:remove
