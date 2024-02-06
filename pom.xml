@@ -19,7 +19,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.source>17</maven.compiler.source>
 
-        <version.server.bom>30.0.0.Final</version.server.bom>
+        <version.server.bom>30.0.1.Final</version.server.bom>
         <version.wildfly.maven.plugin>4.0.0.Final</version.wildfly.maven.plugin>
 	</properties>
 
@@ -94,6 +94,24 @@
 		<dependency>
 			<groupId>jakarta.faces</groupId>
 			<artifactId>jakarta.faces-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.security.enterprise</groupId>
+			<artifactId>jakarta.security.enterprise-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.wildfly.security</groupId>
+			<artifactId>wildfly-elytron-http-oidc</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
