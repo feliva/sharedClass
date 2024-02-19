@@ -53,6 +53,7 @@ public abstract class Model<T> implements Serializable {
         if (obj == null) {
             return false;
         }
+        // se o id for algum tipo de int precisa verificar o tipo do objeto, mas se for somente uuid nao precisaria
         if (!(obj instanceof Model)) {
             return false;
         }

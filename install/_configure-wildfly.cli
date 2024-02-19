@@ -13,12 +13,22 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 /subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql.jdbc", driver-class-name="org.postgresql.Driver", driver-xa-datasource-class-name="org.postgresql.xa.PGXADataSource")
 
 #configuração datasource
+/subsystem=datasources/data-source=umDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/umDS",connection-url="jdbc:postgresql://localhost:5432/um",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=doisDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/doisDS",connection-url="jdbc:postgresql://localhost:5432/dois",user-name=postgres, password=postgres)
+
 /subsystem=datasources/data-source=baseDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/baseDS",connection-url="jdbc:postgresql://localhost:5432/base",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=authDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/authDS",connection-url="jdbc:postgresql://localhost:5432/auth",user-name=postgres, password=postgres)
 /subsystem=datasources/data-source=sessionDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sessionDS",connection-url="jdbc:postgresql://localhost:5432/session",user-name=postgres, password=postgres)
 
 #configuração numero de conexoes do datasource
 /subsystem=datasources/data-source=baseDS:write-attribute(name=min-pool-size,value=10)
 /subsystem=datasources/data-source=baseDS:write-attribute(name=max-pool-size,value=50)
+
+/subsystem=datasources/data-source=authDS:write-attribute(name=min-pool-size,value=10)
+/subsystem=datasources/data-source=authDS:write-attribute(name=max-pool-size,value=50)
+
+/subsystem=datasources/data-source=sessionDS:write-attribute(name=min-pool-size,value=10)
+/subsystem=datasources/data-source=sessionDS:write-attribute(name=max-pool-size,value=50)
 
 #desativa http2, exception não padronizada na especificação
 /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=enable-http2,value=false)

@@ -42,7 +42,7 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
         em.refresh( entity );
     }
     
-    public T update (T entity) throws RollbackException{
+    public T merge (T entity) throws RollbackException{
 //    	System.out.println(this.em);
         return em.merge( entity );
     }
