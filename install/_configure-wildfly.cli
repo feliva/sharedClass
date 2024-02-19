@@ -35,18 +35,10 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 /subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=enable-http2,value=false)
 
 #oidc config
-/subsystem=elytron-oidc-client/secure-deployment="sifw.war"/:add( \
-    realm="feliva", \
-    resource="sifw", \
-    auth-server-url=<#AUTH_SERVER_URL#>/service/auth/, \
-    ssl-required=EXTERNAL)
-
-/subsystem=elytron-oidc-client/secure-deployment=sifw.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
-
 /subsystem=elytron-oidc-client/secure-deployment="testAuth.war"/:add( \
     realm="feliva", \
     resource="testAuth", \
-    auth-server-url=<#AUTH_SERVER_URL#>/auth/auth/, \
+    auth-server-url=<#AUTH_SERVER_URL#>/auth/, \
     ssl-required=EXTERNAL)
 
 /subsystem=elytron-oidc-client/secure-deployment=testAuth.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
