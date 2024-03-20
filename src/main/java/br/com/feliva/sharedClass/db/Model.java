@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Transient;
 import jakarta.xml.bind.annotation.XmlTransient;
 
@@ -14,17 +15,17 @@ public abstract class Model<T> implements Serializable {
 
     public static final String SEPARATIOR_KEY = "@";
 
-    @XmlTransient
+    @JsonIgnore
     public abstract T getMMId();
 
-	@XmlTransient
+	@JsonIgnore//fastxml
 	@Transient
 	public boolean isNovo() {
 		return getMMId() == null;
 	}
 
-    @XmlTransient
     @Transient
+    @JsonIgnore
     public String getKeyConverter() {
         return this.getClass().getName().hashCode() + SEPARATIOR_KEY + this.getMMId().toString();
     }
@@ -33,9 +34,9 @@ public abstract class Model<T> implements Serializable {
     public int hashCode() {
         return Objects.hashCode(getMMId());
     }
-    
-    @XmlTransient
+
     @Transient
+    @JsonIgnore
     public Class getClassParametized() {
     	if(this.getMMId() != null) {
     		return this.getMMId().getClass();
