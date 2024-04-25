@@ -19,7 +19,7 @@
 		<maven.compiler.target>17</maven.compiler.target>
 		<maven.compiler.source>17</maven.compiler.source>
 
-        <version.server.bom>30.0.1.Final</version.server.bom>
+        <version.server.bom>32.0.0.Beta1</version.server.bom>
         <version.wildfly.maven.plugin>4.0.0.Final</version.wildfly.maven.plugin>
 	</properties>
 

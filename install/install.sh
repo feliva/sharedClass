@@ -141,6 +141,7 @@ function wildfly(){
   DEBUG scapeStrings $PATH_INSTALL INS;
 
   DEBUG sed -i    's/#JAVA_HOME.*/JAVA_HOME='$INS'\/jdk'${JDK_LINK_NAME}'/g' $ROOT_PATH_WILDFLY/bin/standalone.conf
+  DEBUG sed -i    's/rem set \"JAVA_HOME.*/set \"JAVA_HOME='$INS'\/jdk'${JDK_LINK_NAME}'\"/g' $ROOT_PATH_WILDFLY/bin/standalone.conf.bat
 
 	DEBUG $ROOT_PATH_WILDFLY/bin/add-user.sh -u manager -p manager
 
@@ -227,7 +228,7 @@ function scapeStrings(){
 
 function prepareWindowns(){
     ## PATH_INSTALL é usado para os comando e navergar pelas pastas
-    PATH_INSTALL="c:/feliva/install";
+    PATH_INSTALL="F:/feliva/feliva/install";
     PWD=$(pwd -W);
 }
 
@@ -237,9 +238,9 @@ EMAIL="a@b.c";
 SENHA_EMAIL="12345678";
 AUTH_SERVER_URL="http://localhost:8080";
 VERSION_JAR_POSTGRES="postgresql-42.6.0";
-VERSION_JDK="21.0.2";
-JDK_LINK_NAME="21";
-VERSION_WILDFLY="30.0.1.Final";
+VERSION_JDK="17.0.10";
+JDK_LINK_NAME="17";
+VERSION_WILDFLY="32.0.0.Beta1";
 #diretorio atual, path linux e windowns
 PWD=$(pwd)
 
