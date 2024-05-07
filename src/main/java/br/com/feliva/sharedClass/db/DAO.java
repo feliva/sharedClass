@@ -1,6 +1,7 @@
 package br.com.feliva.sharedClass.db;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.Set;
 
 import jakarta.inject.Inject;
@@ -15,7 +16,7 @@ import jakarta.validation.Validator;
 public abstract class DAO <T extends Model<?>> implements Serializable{
 
 	private static final long serialVersionUID = 22021991L;
-	
+
 	@Inject protected EntityManager em;
 	@Inject protected Validator validador;
 	
@@ -29,8 +30,9 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
 	} 
 
     @SuppressWarnings("unchecked")
-    public T findById(T entity){
-        return  (T) em.find( entity.getClass(), entity.getMMId() );
+    public T findById(Object id){
+        return  (T) em.find(
+                (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
     }
     
     public T persist (T entity) throws RollbackException{
@@ -69,7 +71,7 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
 
 //    @Transactional(value = TxType.REQUIRES_NEW)//retirada em correçã cardapio admin
 	@Transactional
-    public T updateT (T entity) throws RollbackException{
+    public T mergeT (T entity) throws RollbackException{
         return em.merge( entity );
     }
     
