@@ -2,6 +2,7 @@ package br.com.feliva.sharedClass.db;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.inject.Inject;
@@ -30,11 +31,19 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
 	} 
 
     @SuppressWarnings("unchecked")
-    public T findById(Object id){
+    public T findById(Integer id){
         return  (T) em.find(
                 (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
     }
-    
+    public T findById(String id){
+        return  (T) em.find(
+                (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
+    }
+//
+//    public List<T> listAll(){
+//        this.em.getCriteriaBuilder().createQuery(this.getClass().getGenericSuperclass().getClass()).from;
+//    }
+
     public T persist (T entity) throws RollbackException{
     	em.persist( entity );
         return entity;//remover
