@@ -1,12 +1,12 @@
 #!/bin/bash
 
 ###
-### instale o wsl no power shel do windowsn digite wsl --install, depois abra com o bash do ubunto
+### instale o git bash
 ### e digite ./install -W
 ###
 
 _DEBUG="on"
-WIN=0;
+WIN=1;
 
 function DEBUG(){
     echo $@
@@ -116,12 +116,13 @@ function java(){
 	  DEBUG unzip jdk-${VERSION_JDK}_windows-x64_bin.zip -d $PATH_INSTALL
     #windowns problema com links synbolicos, git bash, apeans rename
     DEBUG mv $PATH_INSTALL/jdk-${VERSION_JDK} $PATH_INSTALL/jdk${JDK_LINK_NAME}
+    DEBUG setx JAVA_HOME $PATH_INSTALL/jdk${JDK_LINK_NAME}
   else
    	DEBUG wget -cv https://download.oracle.com/java/${JDK_LINK_NAME}/archive/jdk-${VERSION_JDK}_linux-x64_bin.tar.gz
-	   DEBUG tar -xvzf jdk-${VERSION_JDK}_linux-x64_bin.tar.gz -C $PATH_INSTALL
-     DEBUG ln -s $PATH_INSTALL/jdk-${VERSION_JDK} $PATH_INSTALL/jdk${JDK_LINK_NAME}
-     # DEBUG update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk${JDK_LINK_NAME}/bin/java 10
-    fi
+	  DEBUG tar -xvzf jdk-${VERSION_JDK}_linux-x64_bin.tar.gz -C $PATH_INSTALL
+    DEBUG ln -s $PATH_INSTALL/jdk-${VERSION_JDK} $PATH_INSTALL/jdk${JDK_LINK_NAME}
+    DEBUG update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk${JDK_LINK_NAME}/bin/java 10
+  fi
 }
 
 
@@ -140,8 +141,6 @@ function wildfly(){
 
   DEBUG scapeStrings $PATH_INSTALL INS;
 
-  DEBUG sed -i    's/#JAVA_HOME.*/JAVA_HOME='$INS'\/jdk'${JDK_LINK_NAME}'/g' $ROOT_PATH_WILDFLY/bin/standalone.conf
-  DEBUG sed -i    's/rem set \"JAVA_HOME.*/set \"JAVA_HOME='$INS'\/jdk'${JDK_LINK_NAME}'\"/g' $ROOT_PATH_WILDFLY/bin/standalone.conf.bat
 
 	DEBUG $ROOT_PATH_WILDFLY/bin/add-user.sh -u manager -p manager
 
@@ -228,7 +227,7 @@ function scapeStrings(){
 
 function prepareWindowns(){
     ## PATH_INSTALL é usado para os comando e navergar pelas pastas
-    PATH_INSTALL="F:/feliva/feliva/install";
+    PATH_INSTALL="F:/feliva/install";
     PWD=$(pwd -W);
 }
 
@@ -238,9 +237,9 @@ EMAIL="a@b.c";
 SENHA_EMAIL="12345678";
 AUTH_SERVER_URL="http://localhost:8080";
 VERSION_JAR_POSTGRES="postgresql-42.6.0";
-VERSION_JDK="17.0.10";
-JDK_LINK_NAME="17";
-VERSION_WILDFLY="32.0.0.Beta1";
+VERSION_JDK="21.0.5";
+JDK_LINK_NAME="21";
+VERSION_WILDFLY="34.0.0.Final";
 #diretorio atual, path linux e windowns
 PWD=$(pwd)
 
