@@ -1,5 +1,7 @@
 package br.com.feliva.sharedClass.constantes;
 
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
@@ -7,7 +9,8 @@ import java.util.Properties;
 public class InitConstantes {
 
 	//PATH é alterado por script de instalacao config/wildfly/install.sh rode ele
-	static public final String PATH_RESOURCES ="F:/feliva/install";//<#PATH#>
+	static public final String CONFIG_PATH ="F:/feliva/install";//<#PATH#>
+	static public final String PATH_RESOURCES =(CONFIG_PATH.endsWith(File.pathSeparator)?CONFIG_PATH:CONFIG_PATH + File.separator);
 	
 	private static Properties config = new Properties();
 
