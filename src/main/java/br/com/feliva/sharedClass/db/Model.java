@@ -29,7 +29,7 @@ public abstract class Model<T> implements Serializable {
     public String getKeyConverter() {
         return this.getClass().getName().hashCode() + SEPARATIOR_KEY + this.getMMId().toString();
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hashCode(getMMId());

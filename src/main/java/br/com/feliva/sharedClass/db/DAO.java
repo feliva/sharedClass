@@ -13,6 +13,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
+import org.hibernate.Session;
 
 public abstract class DAO <T extends Model<?>> implements Serializable{
 
@@ -35,6 +36,11 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
         return  (T) em.find(
                 (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
     }
+
+    public T findById(T entity){
+        return  (T) em.find( entity.getClass(), entity.getMMId() );
+    }
+
     public T findById(String id){
         return  (T) em.find(
                 (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
@@ -54,7 +60,6 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
     }
     
     public T merge (T entity) throws RollbackException{
-//    	System.out.println(this.em);
         return em.merge( entity );
     }
     
@@ -71,14 +76,12 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
     	this.em.detach(entity);
     }
     
-    
     @Transactional
     public T persistT (T entity) throws RollbackException{
     	em.persist( entity );
         return entity;//remover
     }
 
-//    @Transactional(value = TxType.REQUIRES_NEW)//retirada em correçã cardapio admin
 	@Transactional
     public T mergeT (T entity) throws RollbackException{
         return em.merge( entity );
