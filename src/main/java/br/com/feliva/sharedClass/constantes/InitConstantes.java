@@ -10,7 +10,7 @@ public class InitConstantes {
 
 	//PATH é alterado por script de instalacao config/wildfly/install.sh rode ele
 	static public final String CONFIG_PATH ="F:/feliva/install";//<#PATH#>
-	static public final String PATH_RESOURCES =(CONFIG_PATH.endsWith(File.pathSeparator)?CONFIG_PATH:CONFIG_PATH + File.separator);
+	static public final String PATH_RESOURCES =(CONFIG_PATH.endsWith("/")?CONFIG_PATH:CONFIG_PATH + "/");
 	
 	private static Properties config = new Properties();
 
@@ -33,7 +33,7 @@ public class InitConstantes {
 	
 
 	
-	static public final String IMAGEM_PATH 			= PATH_RESOURCES + config.getProperty("imagem.path");
+	static public final String IMAGEM_PATH 			= PATH_RESOURCES + (config.getProperty("imagem.path").endsWith("/")?config.getProperty("imagem.path"):config.getProperty("imagem.path") + "/");
 	static public final String IMAGEM_EXTENSAO 		= config.getProperty("imagem.extencao");
 	static public final int    OIDC_JWT_SIZE 		= Integer.parseInt(config.getProperty("oidc.jwk.size"));
     static public final String OIDC_JWT_FILENAME 	= config.getProperty("oidc.jwk.filename");
