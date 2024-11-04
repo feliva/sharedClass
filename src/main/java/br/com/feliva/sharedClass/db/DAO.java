@@ -37,10 +37,12 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
                 (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
     }
 
-    public T findById(T entity){
+    @SuppressWarnings("unchecked")
+    public T findById(Model entity){
         return  (T) em.find( entity.getClass(), entity.getMMId() );
     }
 
+    @SuppressWarnings("unchecked")
     public T findById(String id){
         return  (T) em.find(
                 (Class<?>)((ParameterizedType)((Class) getClass().getGenericSuperclass()).getGenericSuperclass()).getActualTypeArguments()[0], id );
