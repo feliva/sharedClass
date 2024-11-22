@@ -2,11 +2,12 @@
 
 ###
 ### instale o git bash
-### e digite ./install -W
+### sudo ./install.sh -i /opt/sifw -e darlanfelisberto@gmail.com -s senhaemail -a http://localhost:8080 -o l 
+### acresente o -c para limpar o diretorio de instalacao
 ###
 
 _DEBUG="on"
-WIN=1;
+WIN=l;
 
 function DEBUG(){
     echo $@
@@ -14,7 +15,7 @@ function DEBUG(){
 }
 
 function usage() { 
-    printf "%s -i /opt -e darlan@gmail.com -s senha -a localhostr:8080 -w wildfly -j jar\n" "$0"; 
+    printf "sudo ./install.sh -i /opt -e darlanfelisberto@gmail.com -s senha -a localhost:8080 -o l\n"; 
     return 1; 
 }; 
 
@@ -56,9 +57,9 @@ function main() {
                 usage;
                 exit 0;
                 ;;
-            -W) 
+            -o) 
                 shift; 
-                WIN=1
+                WIN="${1:?$(usage)}"
                 ;; 
             *) 
                 usage;
@@ -71,16 +72,14 @@ function main() {
 
 function removeInstalacao(){
     DEBUG rm -R $PATH_INSTALL
-    DEBUG rm -R /usr/lib/jvm/jdk${JDK_LINK_NAME}
-    DEBUG rm -R /usr/lib/jvm/jdk-${VERSION_JDK}
-    DEBUG rm -R wildfly-$VERSION_WILDFLY.tar.gz
     DEBUG rm -R wildfly.*
-    DEBUG rm -R launch.sh 
-    DEBUG rm $VERSION_JAR_POSTGRES'.jar'
-    DEBUG rm jdk-${VERSION_JDK}_linux-x64_bin.tar.gz
-    DEBUG rm configure-wildfly.cli
-    DEBUG rm /etc/systemd/system/wildfly.service 
-    DEBUG rm -R /etc/wildfly
+    #DEBUG rm -R launch.sh 
+    #DEBUG rm $VERSION_JAR_POSTGRES'.jar'
+    #DEBUG rm jdk-${VERSION_JDK}_linux-x64_bin.tar.gz
+    DEBUG rm -R configure-wildfly.cli
+    DEBUG rm -R configuration_linux.properties
+    #DEBUG rm /etc/systemd/system/wildfly.service 
+    #DEBUG rm -R /etc/wildfly
 
     echo "Limpo."
 }
@@ -111,36 +110,54 @@ function fileContantes(){
 }
 
 function java(){
-  if [ $WIN -eq 1 ]; then
-    DEBUG curl -L -O https://download.oracle.com/java/${JDK_LINK_NAME}/archive/jdk-${VERSION_JDK}_windows-x64_bin.zip
+  if [ "$WIN" = w ]; then
+    downloadJava jdk-${VERSION_JDK}_windows-x64_bin.zip
 	  DEBUG unzip jdk-${VERSION_JDK}_windows-x64_bin.zip -d $PATH_INSTALL
     #windowns problema com links synbolicos, git bash, apeans rename
     DEBUG mv $PATH_INSTALL/jdk-${VERSION_JDK} $PATH_INSTALL/jdk${JDK_LINK_NAME}
     DEBUG setx JAVA_HOME $PATH_INSTALL/jdk${JDK_LINK_NAME}
   else
-   	DEBUG wget -cv https://download.oracle.com/java/${JDK_LINK_NAME}/archive/jdk-${VERSION_JDK}_linux-x64_bin.tar.gz
+   	downloadJava jdk-${VERSION_JDK}_linux-x64_bin.tar.gz 
 	  DEBUG tar -xvzf jdk-${VERSION_JDK}_linux-x64_bin.tar.gz -C $PATH_INSTALL
-    DEBUG ln -s $PATH_INSTALL/jdk-${VERSION_JDK} $PATH_INSTALL/jdk${JDK_LINK_NAME}
-    DEBUG update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk${JDK_LINK_NAME}/bin/java 10
+    DEBUG mv $PATH_INSTALL/jdk-${VERSION_JDK} $PATH_INSTALL/jdk${JDK_LINK_NAME}
+    DEBUG export JAVA_HOME=$PATH_INSTALL/jdk${JDK_LINK_NAME}
   fi
 }
 
+function downloadJava(){
+  echo $1;
+  if [ -e $1 ]; then
+    echo 'File:'$1' já existe.'
+  else
+    DEBUG curl -L -O https://download.oracle.com/java/${JDK_LINK_NAME}/archive/$1
+  fi
+}
+
+function downloadPostgresJar(){
+  if [ -e $1 ]; then
+    echo 'File:'$1' já existe.'
+  else
+    DEBUG curl -L -O https://jdbc.postgresql.org/download/$1
+  fi
+}
+
+function downloadWildfly(){
+  if [ -e $1 ]; then
+    echo 'File:'$1' já existe.'
+  else
+    DEBUG curl -L -O https://github.com/wildfly/wildfly/releases/download/$VERSION_WILDFLY/$1
+  fi
+}
 
 function wildfly(){
   ROOT_PATH_WILDFLY=$PATH_INSTALL/wildfly-$VERSION_WILDFLY
 
-	DEBUG curl -L -O https://jdbc.postgresql.org/download/$VERSION_JAR_POSTGRES.jar
-	DEBUG curl -L -O https://github.com/wildfly/wildfly/releases/download/$VERSION_WILDFLY/wildfly-$VERSION_WILDFLY.tar.gz;
+	downloadPostgresJar $VERSION_JAR_POSTGRES.jar
+	downloadWildfly wildfly-$VERSION_WILDFLY.tar.gz
 
 	DEBUG tar -xvzf "wildfly-$VERSION_WILDFLY.tar.gz" -C $PATH_INSTALL
 
-  #no windowns o ln faz uma copia do diretorio no git bash
-  if [ $WIN != 1 ]; then
-	  DEBUG ln -s "$ROOT_PATH_WILDFLY" "$PATH_INSTALL/wildfly"
-  fi
-
   DEBUG scapeStrings $PATH_INSTALL INS;
-
 
 	DEBUG $ROOT_PATH_WILDFLY/bin/add-user.sh -u manager -p manager
 
@@ -153,7 +170,7 @@ function wildfly(){
   DEBUG sed -i    's/<#AUTH_SERVER_URL#>/'$AUTH_SERVER_URL'/g'    configure-wildfly.cli
 
 
-  if [ $WIN -eq 0 ]; then
+  if [ "$WIN" = l ]; then
     DEBUG echo "Sleep de 10 segundos..."
     DEBUG sleep 1
     DEBUG $ROOT_PATH_WILDFLY/bin/standalone.sh &
@@ -161,6 +178,8 @@ function wildfly(){
     DEBUG sleep 10
     DEBUG $ROOT_PATH_WILDFLY/bin/jboss-cli.sh --connect --file=configure-wildfly.cli
     DEBUG $ROOT_PATH_WILDFLY/bin/jboss-cli.sh --connect --command=shutdown
+    echo "Pronto tudo instalado."
+    echo "Para instalar como servico, utilize os aquivos launch.sh wildfly.conf e wildfly.service"
   else
     echo 'no cmd executes os comandos:'
     echo $ROOT_PATH_WILDFLY'/bin/standalone.bat &'
@@ -227,9 +246,17 @@ function scapeStrings(){
 
 function prepareWindowns(){
     ## PATH_INSTALL é usado para os comando e navergar pelas pastas
+    echo 'instalacao em windowns'
     PATH_INSTALL="F:/feliva/install";
     PWD=$(pwd -W);
 }
+
+if command -v curl >&2; then
+  echo Curl ok
+else
+  echo instale o comando: curl
+  exit 1;
+fi
 
 
 PATH_INSTALL="/opt/feliva/install";
@@ -245,7 +272,7 @@ PWD=$(pwd)
 
 DEBUG main "$@"
 
-if [ $WIN -eq 1 ]; then
+if [ "$WIN" = w ]; then
     prepareWindowns
     echo 'win';
 else
@@ -255,7 +282,7 @@ fi
 #escape caracter / 
 DEBUG scapeStrings $AUTH_SERVER_URL AUTH_SERVER_URL
 
-printf ">%s< >%s< >%s< >%s< >%s< >%s< >%s< >%s< \n" $VERSION_WILDFLY $PATH_INSTALL $EMAIL $SENHA_EMAIL $AUTH_SERVER $VERSION_JAR_POSTGRES $VERSION_JDK;
+printf ">%s< >%s< >%s< >%s< >%s< >%s< >%s< >%s< \n" $VERSION_WILDFLY $PATH_INSTALL $EMAIL $SENHA_EMAIL $AUTH_SERVER_URL $VERSION_JAR_POSTGRES $VERSION_JDK;
 
 installDev;
 
