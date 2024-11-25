@@ -17,7 +17,7 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 #/subsystem=datasources/data-source=erpUmDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/umDS",connection-url="jdbc:postgresql://localhost:5432/erp_um",user-name=postgres, password=postgres)
 #/subsystem=datasources/data-source=erpDoisDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/doisDS",connection-url="jdbc:postgresql://localhost:5432/erp_dois",user-name=postgres, password=postgres)
 
-/subsystem=datasources/data-source=baseDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/baseDS",connection-url="jdbc:postgresql://localhost:5432/base",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=baseDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sifwDS",connection-url="jdbc:postgresql://localhost:5432/sifw",user-name=postgres, password=postgres)
 /subsystem=datasources/data-source=authDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/authDS",connection-url="jdbc:postgresql://localhost:5432/auth",user-name=postgres, password=postgres)
 #/subsystem=datasources/data-source=sessionDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sessionDS",connection-url="jdbc:postgresql://localhost:5432/session",user-name=postgres, password=postgres)
 
@@ -42,7 +42,14 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
     auth-server-url=<#AUTH_SERVER_URL#>/auth/, \
     ssl-required=EXTERNAL)
 
+/subsystem=elytron-oidc-client/secure-deployment="sifw.war"/:add( \
+    realm="feliva", \
+    resource="sifw", \
+    auth-server-url=<#AUTH_SERVER_URL#>/auth/, \
+    ssl-required=EXTERNAL)
+
 /subsystem=elytron-oidc-client/secure-deployment=testAuth.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
+/subsystem=elytron-oidc-client/secure-deployment=sifw.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
 
 
 #configuração infinispan esta funcionando, mas demora mais no desenvolvimento para subir o server
