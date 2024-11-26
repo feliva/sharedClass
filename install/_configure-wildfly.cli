@@ -18,7 +18,7 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 #/subsystem=datasources/data-source=erpDoisDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/doisDS",connection-url="jdbc:postgresql://localhost:5432/erp_dois",user-name=postgres, password=postgres)
 
 /subsystem=datasources/data-source=baseDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sifwDS",connection-url="jdbc:postgresql://localhost:5432/sifw",user-name=postgres, password=postgres)
-/subsystem=datasources/data-source=authDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/authDS",connection-url="jdbc:postgresql://localhost:5432/auth",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=authDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/authDS",connection-url="jdbc:postgresql://localhost:5432/sifw",user-name=postgres, password=postgres)
 #/subsystem=datasources/data-source=sessionDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sessionDS",connection-url="jdbc:postgresql://localhost:5432/session",user-name=postgres, password=postgres)
 
 #configuração numero de conexoes do datasource
