@@ -171,6 +171,7 @@ function wildfly(){
 
 
   if [ "$WIN" = l ]; then
+    DEBUG sed -i    '1i JBOSS_JAVA_SIZING="-Xms256m -Xmx8096m -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=512m -XX:+UsarZGC"'   $ROOT_PATH_WILDFLY/bin/standalone.conf
     DEBUG echo "Sleep de 10 segundos..."
     DEBUG sleep 1
     DEBUG $ROOT_PATH_WILDFLY/bin/standalone.sh &
