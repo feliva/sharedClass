@@ -53,6 +53,7 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 
 
 #configuração infinispan esta funcionando, mas demora mais no desenvolvimento para subir o server
+# use ./standalone.sh --server-config=standalone-ha.xml
 #/subsystem=infinispan/cache-container=web/invalidation-cache=http-db:add()
 #/subsystem=infinispan/cache-container=web:write-attribute(name=default-cache,value=http-db)
 #/subsystem=infinispan/cache-container=web/invalidation-cache=http-db/store=none:remove(){allow-resource-service-restart=true}
