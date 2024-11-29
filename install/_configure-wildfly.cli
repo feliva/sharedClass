@@ -13,13 +13,13 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 /subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql.jdbc", driver-class-name="org.postgresql.Driver", driver-xa-datasource-class-name="org.postgresql.xa.PGXADataSource")
 
 #configuração datasource
-#/subsystem=datasources/data-source=erpDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/erpDS",connection-url="jdbc:postgresql://localhost:5432/erp",user-name=postgres, password=postgres)
-#/subsystem=datasources/data-source=erpUmDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/umDS",connection-url="jdbc:postgresql://localhost:5432/erp_um",user-name=postgres, password=postgres)
-#/subsystem=datasources/data-source=erpDoisDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/doisDS",connection-url="jdbc:postgresql://localhost:5432/erp_dois",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=erpDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/erpDS",connection-url="jdbc:postgresql://localhost:5432/erp",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=erpUmDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/erpUmDS",connection-url="jdbc:postgresql://localhost:5432/erpUm",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=erpDoisDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/erpDoisDS",connection-url="jdbc:postgresql://localhost:5432/erpDois",user-name=postgres, password=postgres)
 
 /subsystem=datasources/data-source=baseDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sifwDS",connection-url="jdbc:postgresql://localhost:5432/sifw",user-name=postgres, password=postgres)
 /subsystem=datasources/data-source=authDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/authDS",connection-url="jdbc:postgresql://localhost:5432/sifw",user-name=postgres, password=postgres)
-#/subsystem=datasources/data-source=sessionDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sessionDS",connection-url="jdbc:postgresql://localhost:5432/session",user-name=postgres, password=postgres)
+/subsystem=datasources/data-source=sessionDS:add(driver-name=postgresql,jndi-name="java:jboss/datasources/sessionDS",connection-url="jdbc:postgresql://localhost:5432/session",user-name=postgres, password=postgres)
 
 #configuração numero de conexoes do datasource
 /subsystem=datasources/data-source=baseDS:write-attribute(name=min-pool-size,value=3)
@@ -28,8 +28,8 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
 /subsystem=datasources/data-source=authDS:write-attribute(name=min-pool-size,value=3)
 /subsystem=datasources/data-source=authDS:write-attribute(name=max-pool-size,value=50)
 
-#/subsystem=datasources/data-source=sessionDS:write-attribute(name=min-pool-size,value=3)
-#/subsystem=datasources/data-source=sessionDS:write-attribute(name=max-pool-size,value=50)
+/subsystem=datasources/data-source=sessionDS:write-attribute(name=min-pool-size,value=3)
+/subsystem=datasources/data-source=sessionDS:write-attribute(name=max-pool-size,value=50)
 
 #desativa http2, exception não padronizada na especificação
 /subsystem=undertow/server=default-server/https-listener=https:write-attribute(name=enable-http2,value=false)
@@ -48,8 +48,15 @@ module add --name=org.postgresql.jdbc --resources=<#JAR_POSTGRES#>.jar  --depend
     auth-server-url=<#AUTH_SERVER_URL#>/auth/, \
     ssl-required=EXTERNAL)
 
+/subsystem=elytron-oidc-client/secure-deployment="erp.war"/:add( \
+    realm="feliva", \
+    resource="erp", \
+    auth-server-url=<#AUTH_SERVER_URL#>/auth/, \
+    ssl-required=EXTERNAL)
+
 /subsystem=elytron-oidc-client/secure-deployment=testAuth.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
 /subsystem=elytron-oidc-client/secure-deployment=sifw.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
+/subsystem=elytron-oidc-client/secure-deployment=erp.war/credential=secret:add(secret=3fd70ff4-fe2b-47b6-a8a3-cd1cf281a937)
 
 
 #configuração infinispan esta funcionando, mas demora mais no desenvolvimento para subir o server
