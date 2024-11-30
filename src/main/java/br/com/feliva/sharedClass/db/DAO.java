@@ -3,6 +3,7 @@ package br.com.feliva.sharedClass.db;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import jakarta.inject.Inject;
@@ -98,4 +99,5 @@ public abstract class DAO <T extends Model<?>> implements Serializable{
 			System.out.println("é novo, method->removeT");
 		}
     }
+
 }
