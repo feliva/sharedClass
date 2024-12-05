@@ -5,10 +5,12 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Transient;
 import jakarta.xml.bind.annotation.XmlTransient;
 
-@SuppressWarnings("rawtypes") 
+@SuppressWarnings("rawtypes")
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public abstract class Model<T> implements Serializable {
 
     private static final long serialVersionUID = 22021991L;
