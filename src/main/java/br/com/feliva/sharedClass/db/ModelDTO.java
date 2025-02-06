@@ -13,6 +13,7 @@ public abstract class ModelDTO<T> implements Serializable {
     @JsonIgnore
     public abstract T getMMId();
 
+    @Override
     public int hashCode() {
         return Objects.hashCode(getMMId());
     }
@@ -25,7 +26,7 @@ public abstract class ModelDTO<T> implements Serializable {
         if (obj == null) {
             return false;
         }
-
+        // se o id for algum tipo de int precisa verificar o tipo do objeto, mas se for somente uuid nao precisaria
         if (!(obj instanceof ModelDTO)) {
             return false;
         }
