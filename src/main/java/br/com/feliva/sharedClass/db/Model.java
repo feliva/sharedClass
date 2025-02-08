@@ -20,7 +20,7 @@ public abstract class Model<T> implements Serializable {
     @JsonIgnore
     public abstract T getMMId();
 
-	@JsonIgnore//fastxml
+	@JsonIgnore
 	@Transient
 	public boolean isNovo() {
 		return getMMId() == null;
