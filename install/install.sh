@@ -265,9 +265,9 @@ EMAIL="a@b.c";
 SENHA_EMAIL="12345678";
 AUTH_SERVER_URL="http://localhost:8080";
 VERSION_JAR_POSTGRES="postgresql-42.6.0";
-VERSION_JDK="21.0.5";
+VERSION_JDK="21.0.6";
 JDK_LINK_NAME="21";
-VERSION_WILDFLY="35.0.0.Final";
+VERSION_WILDFLY="34.0.0.Final";
 #diretorio atual, path linux e windowns
 PWD=$(pwd)
 
