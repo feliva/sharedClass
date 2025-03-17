@@ -267,7 +267,7 @@ AUTH_SERVER_URL="http://localhost:8080";
 VERSION_JAR_POSTGRES="postgresql-42.6.0";
 VERSION_JDK="21.0.5";
 JDK_LINK_NAME="21";
-VERSION_WILDFLY="35.0.0.Final";
+VERSION_WILDFLY="35.0.1.Final";
 #diretorio atual, path linux e windowns
 PWD=$(pwd)
 
