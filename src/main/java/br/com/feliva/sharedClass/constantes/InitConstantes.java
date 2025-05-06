@@ -1,42 +1,34 @@
 package br.com.feliva.sharedClass.constantes;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
 
 public class InitConstantes {
 
 	//PATH é alterado por script de instalacao config/wildfly/install.sh rode ele
-	static public final String CONFIG_PATH ="F:/feliva/install";//<#PATH#>
-	static public final String PATH_RESOURCES =(CONFIG_PATH.endsWith("/")?CONFIG_PATH:CONFIG_PATH + "/");
+
 	
 	private static Properties config = new Properties();
 
 	static {
-		String nameFileContantes = PATH_RESOURCES + "/configuration_linux.properties";
+		String nameFileContantes = "config_sifw.properties";
 		try {
-			FileInputStream configFile = new FileInputStream(nameFileContantes);
-	        if (configFile != null) {
-	            try {
-	                config.load(configFile);
-	            } catch (IOException e) {
-	                throw new IllegalStateException("Could not load OpenIdConfig");
-	            }
+			InputStream configfile = InitConstantes.class.getClassLoader().getResourceAsStream(nameFileContantes);
+	        if (configfile != null) {
+				config.load(configfile);
 	        }
 		} catch (Exception e) {
 			System.err.println("Não foi encontrado arquivo de configuração de constantes: " + nameFileContantes);
 			System.exit(1);
 		}
 	}
-	
 
-	
-	static public final String IMAGEM_PATH 			= PATH_RESOURCES + (config.getProperty("imagem.path").endsWith("/")?config.getProperty("imagem.path"):config.getProperty("imagem.path") + "/");
+
+	static public final String CONFIG_PATH 			= config.getProperty("PATH_INSTALL");
+	static public final String IMAGEM_PATH 			= CONFIG_PATH + config.getProperty("imagem.path") + File.separator;
 	static public final String IMAGEM_EXTENSAO 		= config.getProperty("imagem.extencao");
 	static public final int    OIDC_JWT_SIZE 		= Integer.parseInt(config.getProperty("oidc.jwk.size"));
     static public final String OIDC_JWT_FILENAME 	= config.getProperty("oidc.jwk.filename");
-    static public final String OIDC_JWK_PATH 		= PATH_RESOURCES;
+    static public final String OIDC_JWK_PATH 		= CONFIG_PATH;
     static public final String OIDC_ISSUR 			= config.getProperty("oidc.issur");
 }
