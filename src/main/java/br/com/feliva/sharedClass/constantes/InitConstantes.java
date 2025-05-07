@@ -5,10 +5,7 @@ import java.util.Properties;
 
 public class InitConstantes {
 
-	//PATH é alterado por script de instalacao config/wildfly/install.sh rode ele
-
-	
-	private static Properties config = new Properties();
+	private static final Properties config = new Properties();
 
 	static {
 		String nameFileContantes = "config_sifw.properties";
