@@ -1,9 +1,5 @@
 package br.com.feliva.sharedClass.db;
 
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
-import java.util.Set;
-
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.RollbackException;
@@ -13,7 +9,11 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 
-public abstract class DAO <M extends Model<?>> implements Serializable{
+import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.util.Set;
+
+public abstract class DAO<M extends Model> implements Serializable{
 
 	private static final long serialVersionUID = 22021991L;
 
@@ -35,7 +35,7 @@ public abstract class DAO <M extends Model<?>> implements Serializable{
     }
 
     @SuppressWarnings("unchecked")
-    public M findById(Model<?> entity){
+    public M findById(Model entity){
         return  (M) em.find( entity.getClass(), entity.getMMId() );
     }
 
@@ -53,7 +53,7 @@ public abstract class DAO <M extends Model<?>> implements Serializable{
         em.merge(entity);
     }
     
-    public void remove (Model<?> entity) throws RollbackException{
+    public void remove (Model entity) throws RollbackException{
 		if(!entity.isNovo()) {
 			em.remove(em.contains(entity) ? entity : em.merge(entity));
 		} else {
